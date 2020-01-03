@@ -40,7 +40,7 @@ export const Item = ({ item }) => (
 
 Item.propTypes = {
   item: PropTypes.shape({
-    id: PropTypes.number,
+    id: PropTypes.string,
     description: PropTypes.string,
     price: PropTypes.number,
     title: PropTypes.string,
