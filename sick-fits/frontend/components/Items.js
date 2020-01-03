@@ -1,10 +1,10 @@
 import React from 'react';
-import { Query } from 'react-apollo';
+import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import styled from 'styled-components';
 import { Item } from './Item';
 
-const ALL_ITEMS_QUERY = gql`
+export const ALL_ITEMS_QUERY = gql`
   query ALL_ITEMS_QUERY {
     items {
       id
@@ -29,20 +29,20 @@ const ItemsList = styled.div`
   margin: 0 auto;
 `;
 
-export const Items = () => (
-  <Center>
-    <Query query={ALL_ITEMS_QUERY}>
-      {({ data, error, loading }) => {
-        if (loading) return <p>Loading...</p>;
-        if (error) return <p>Error: {error.message}</p>;
-        return (
-          <ItemsList>
-            {data.items.map(item => (
-              <Item item={item} key={item.id} />
-            ))}
-          </ItemsList>
-        );
-      }}
-    </Query>
-  </Center>
-);
+function Items() {
+  const { loading, error, data } = useQuery(ALL_ITEMS_QUERY);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  return (
+    <Center>
+      <ItemsList>
+        {data.items.map(item => (
+          <Item item={item} key={item.id} />
+        ))}
+      </ItemsList>
+    </Center>
+  );
+}
+
+export default Items;
