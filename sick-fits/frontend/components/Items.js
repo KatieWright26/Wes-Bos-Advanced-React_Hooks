@@ -29,7 +29,7 @@ const ItemsList = styled.div`
   margin: 0 auto;
 `;
 
-function Items() {
+export default function Items() {
   const { loading, error, data } = useQuery(ALL_ITEMS_QUERY);
 
   if (loading) return <p>Loading...</p>;
@@ -44,5 +44,3 @@ function Items() {
     </Center>
   );
 }
-
-export default Items;

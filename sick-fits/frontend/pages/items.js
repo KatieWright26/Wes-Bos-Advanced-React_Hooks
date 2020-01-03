@@ -1,4 +1,3 @@
-// // import { Home } from './index';
+import Home from './index';
 
-// // export default Home;
-// export const Items = () => {};
+export default Home;
