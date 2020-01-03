@@ -1,11 +1,11 @@
 import React from 'react';
 import gql from 'graphql-tag';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 import { useMutation } from '@apollo/react-hooks';
 import Form from './styles/Form';
 import formatMoney from '../lib/formatMoney';
 import Error from './ErrorMessage';
-import useForm from '../hooks/useForm';
+import { useForm } from '../hooks/useForm';
 
 export const CREATE_ITEM_MUTATION = gql`
   mutation CREATE_ITEM_MUTATION(
@@ -32,6 +32,7 @@ export default function CreateItem() {
 
   const [values, handleChange] = useForm(initialValues);
   const [createItem] = useMutation(CREATE_ITEM_MUTATION);
+  const router = useRouter();
 
   const uploadFile = async e => {
     const { files } = e.target;
@@ -57,7 +58,7 @@ export default function CreateItem() {
         const res = await createItem({
           variables: values,
         });
-        Router.push({
+        router.push({
           pathname: '/item',
           query: { id: res.data.createItem.id },
         });
