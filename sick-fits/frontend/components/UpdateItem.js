@@ -1,34 +1,11 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-// import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
-// import Router from 'next/router';
 import { useQuery, useMutation } from '@apollo/react-hooks';
+import { SINGLE_ITEM_QUERY } from './Queries';
+import { UPDATE_ITEM_MUTATION } from './Mutations';
 import Form from './styles/Form';
 import formatMoney from '../lib/formatMoney';
 import Error from './ErrorMessage';
-
-export const SINGLE_ITEM_QUERY = gql`
-  query SINGLE_ITEM_QUERY($id: ID!) {
-    item(where: { id: $id }) {
-      id
-      title
-      description
-      price
-    }
-  }
-`;
-
-export const UPDATE_ITEM_MUTATION = gql`
-  mutation UPDATE_ITEM_MUTATION($id: ID!, $title: String, $description: String, $price: Int) {
-    updateItem(id: $id, title: $title, description: $description, price: $price) {
-      id
-      title
-      description
-      price
-    }
-  }
-`;
 
 function UpdateItem({ id }) {
   const { data, loading } = useQuery(SINGLE_ITEM_QUERY, {
@@ -57,7 +34,6 @@ function UpdateItem({ id }) {
         ...state,
       },
     });
-    console.log('updated');
   };
 
   return (

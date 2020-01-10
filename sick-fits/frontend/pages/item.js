@@ -1,5 +1,16 @@
-// import SingleItem from '../components/SingleItem';
+import PropTypes from 'prop-types';
+import SingleItem from '../components/SingleItem';
 
-const Item = props => <div>"item</div>;
+export default function Item({ query }) {
+  return (
+    <div>
+      <SingleItem id={query.id} />
+    </div>
+  );
+}
 
-export default Item;
+Item.propTypes = {
+  query: PropTypes.shape({
+    id: PropTypes.string,
+  }),
+};
