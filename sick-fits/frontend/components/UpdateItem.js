@@ -30,46 +30,39 @@ export const UPDATE_ITEM_MUTATION = gql`
   }
 `;
 
-export default function UpdateItem({ id }) {
-  const { data: queryData, loading } = useQuery(SINGLE_ITEM_QUERY, {
+function UpdateItem({ id }) {
+  const { data, loading } = useQuery(SINGLE_ITEM_QUERY, {
     variables: { id },
   });
+  const [state, setState] = useState({});
+  const [updateItem] = useMutation(UPDATE_ITEM_MUTATION);
+
   const handleChange = e => {
     const { name, type, value } = e.target;
-    const val = type === 'number' ? parseFloat(value) : value;
+    const sanitizeValue = type === 'number' ? parseFloat(value) : value;
     setState({
-      ...queryData.item,
-      [name]: val,
+      ...state,
+      [name]: sanitizeValue,
     });
   };
-  const [val, setState] = useState(...queryData.item);
 
-  const [
-    updateItem,
-    { data: mutationData, loading: mutationLoading, error: mutationError },
-  ] = useMutation(UPDATE_ITEM_MUTATION, { variables: { id, ...val } });
-  // , { variables: id: id, ...data})
-
-  // const updateItem = async (e, updateItemMutation) => {
-  //   e.preventDefault();
-  //   const res = await updateItemMutation({
-  //     variables: {
-  //       id,
-  //       ...data,
-  //     },
-  //   });
-
-  //   console.log('Updated!!');
-  // };
   if (loading) return <p>Loading...</p>;
-  console.log(state);
-  if (!queryData.item) return <p>No Item Found for ID {id}</p>;
+  if (!data.item) return <p>No Item Found for ID {id}</p>;
+
+  const update = async (e, updateItemMutation) => {
+    e.preventDefault();
+    const res = await updateItemMutation({
+      variables: {
+        id,
+        ...state,
+      },
+    });
+    console.log('updated');
+  };
 
   return (
-    // { updateItem => (
-    <Form onSubmit={e => updateItem(e, updateItem)}>
-      <Error error={mutationError} />
-      <fieldset disabled={mutationLoading} aria-busy={mutationLoading}>
+    <Form onSubmit={e => update(e, updateItem)}>
+      <fieldset>
         <label htmlFor="title">
           Title
           <input
@@ -78,7 +71,7 @@ export default function UpdateItem({ id }) {
             name="title"
             placeholder="Title"
             required
-            defaultValue={queryData.item.title}
+            defaultValue={data.item.title}
             onChange={handleChange}
           />
         </label>
@@ -91,7 +84,7 @@ export default function UpdateItem({ id }) {
             name="price"
             placeholder="Price"
             required
-            defaultValue={queryData.item.price}
+            defaultValue={data.item.price}
             onChange={handleChange}
           />
         </label>
@@ -103,17 +96,18 @@ export default function UpdateItem({ id }) {
             name="description"
             placeholder="Enter A Description"
             required
-            defaultValue={queryData.item.description}
+            defaultValue={data.item.description}
             onChange={handleChange}
           />
         </label>
         <button type="submit">Sav{loading ? 'ing' : 'e'} Changes</button>
       </fieldset>
     </Form>
-    // )}
   );
 }
 
 UpdateItem.propTypes = {
   id: PropTypes.string,
 };
+
+export default UpdateItem;
